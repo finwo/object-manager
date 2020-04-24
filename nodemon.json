@@ -1,0 +1,8 @@
+{
+  "verbose": true,
+  "ignore": [
+    "public/assets/client.js",
+    "public/assets/client.js.*",
+    "public/assets/client.min.js"
+  ]
+}

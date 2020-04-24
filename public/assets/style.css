@@ -1,0 +1,97 @@
+/* settings */
+:root {
+  --border-radius      : 2pt;
+  --line-height        : 1.5em;
+  --global-background  : #EEE;
+  --color-primary-front: #444;
+  --color-primary-back : #FFF;
+}
+
+/* reset */
+* {
+  background    : transparent;
+  box-sizing    : border-box;
+  color         : inherit;
+  font-family   : sans-serif;
+  line-height   : var(--line-height);
+  text-rendering: optimizeLegibility;
+  vertical-align: inherit;
+}
+
+/* layout */
+html, body {
+  margin : 0;
+  padding: 0;
+}
+nav {
+  padding   : 1em;
+  text-align: right;
+}
+main {
+  margin   : 0 auto;
+  max-width: 60em;
+}
+section {
+  margin : 1em;
+  padding: 1em;
+}
+svg.feather {
+  display: inline-block;
+  height : 1em;
+}
+nav > :first-child {
+  float: left;
+}
+nav > * {
+  text-align: initial;
+}
+nav > a {
+  text-decoration: none;
+}
+input {
+  font-size: inherit;
+  padding  : 0 0.5em;
+  width    : 100%;
+}
+table {
+  width: 100%;
+}
+section > h1:first-child,
+section > h2:first-child,
+section > h3:first-child,
+section > h4:first-child {
+  margin-top: 0;
+}
+.autocomplete {
+  background: var(--color-primary-back);
+  box-shadow: 0 1pt 2pt rgba(0,0,0,0.5);
+  color     : var(--color-primary-front);
+}
+.autocomplete > div {
+  padding: 0.5em;
+}
+.autocomplete > div:hover {
+  background: rgba(0,0,0,0.1);
+}
+
+/* styling */
+html {
+  background: var(--global-background);
+  color     : var(--color-primary-front);
+}
+nav {
+  background: var(--color-primary-back);
+  box-shadow: 0 1pt 2pt rgba(0,0,0,0.5);
+}
+section {
+  background   : var(--color-primary-back);
+  border-radius: var(--border-radius);
+  box-shadow   : 0 1pt 2pt rgba(0,0,0,0.5);
+}
+input {
+  border       : 1px solid var(--color-primary-front);
+  border-radius: var(--border-radius);
+}
+.btn {
+  cursor: pointer;
+}

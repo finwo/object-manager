@@ -1,0 +1,52 @@
+{
+  "name": "document-management-app",
+  "version": "0.0.1",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"nodemon --ext js,riot --exec npm start\" \"browser-sync start --proxy localhost:8080 --files public/\"",
+    "start": "node server.js",
+    "prestart": "browserify -t riotify client.js -o public/assets/client.js ; uglifyjs --compress --mangle < public/assets/client.js > public/assets/client.min.js"
+  },
+  "author": "Robin Bron <robin@finwo.nl>",
+  "license": "MIT",
+  "dependencies": {
+    "@ontologies/as": "^1.0.1",
+    "@ontologies/core": "^2.0.1",
+    "@ontologies/dcelems": "^1.0.0",
+    "@ontologies/dcterms": "^1.0.0",
+    "@ontologies/dctype": "^1.0.0",
+    "@ontologies/foaf": "^1.0.0",
+    "@ontologies/ld": "^1.0.0",
+    "@ontologies/owl": "^1.0.0",
+    "@ontologies/prov": "^1.0.0",
+    "@ontologies/rdf": "^1.0.0",
+    "@ontologies/rdfs": "^1.0.0",
+    "@ontologies/schema": "^1.0.0",
+    "@ontologies/shacl": "^1.0.0",
+    "@ontologies/skos": "^1.0.0",
+    "@ontologies/xsd": "^1.0.0",
+    "@riotjs/route": "^5.3.1",
+    "autocompleter": "^6.0.3",
+    "autolevel": "^1.0.4",
+    "compression": "^1.7.4",
+    "express": "^4.17.1",
+    "feather-icons": "^4.28.0",
+    "fuse.js": "^5.2.3",
+    "lucene": "^2.1.1",
+    "lucene-filter": "^0.1.7",
+    "minimist": "^1.2.5",
+    "riot": "^4.12.0",
+    "sublevel": "^2.4.0"
+  },
+  "devDependencies": {
+    "@riotjs/compiler": "^4.8.2",
+    "browser-sync": "^2.26.7",
+    "browserify": "^16.5.1",
+    "concurrently": "^5.1.0",
+    "nodemon": "^2.0.3",
+    "riotify": "^4.0.0",
+    "uglify-es": "^3.3.9"
+  }
+}

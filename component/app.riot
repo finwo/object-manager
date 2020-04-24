@@ -1,0 +1,200 @@
+<app>
+  <router>
+    <nav>
+      <a href="/"><i data-feather=home></i></a>
+      <a href="/i18n"><i data-feather=globe></i></a>
+    </nav>
+    <route on-mounted={ onUpdated } path="/">
+      <main>
+        <section>
+          <input id=searchInput type=text placeholder=search onkeyup={ onSearch } onchange={ onSearch } />
+        </section>
+        <section>
+          <table>
+            <thead>
+              <tr>
+                <th>Type</th>
+                <th>Date</th>
+                <th></th>
+                  <th><a href="/objects/new"><i data-feather=plus></i></a></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr each={ obj in objects }>
+                <td>{ obj['rdf:type'] }</td>
+                <td>{ obj['dcterms:date'] }</td>
+                  <td><a href="/objects/{ obj._id }"><i data-feather=edit></i></a></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </route>
+    <route on-mounted={ onUpdated } path="/objects/new">
+      <main>
+        <section>
+          <h3>Metadata</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Field</th>
+                <th>Value</th>
+                <th><a class="btn" onclick={ addField }><i data-feather=plus></i></a></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr each={ field in objectSelected.fields }>
+                <td><input type=text onkeyup={ updateValue(field, 'key')   } onchange={ updateValue(field, 'key')   } value={ field.key   } id={ field.id + '_key'   } /></td>
+                <td><input type=text onkeyup={ updateValue(field, 'value') } onchange={ updateValue(field, 'value') } value={ field.value } id={ field.id + '_value' } /></td>
+                <td class="btn" onclick={ () => deleteField(field) }><i data-feather=trash></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h3>Attachments</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Preview</th>
+                <th>Size</th>
+                <th><a class="btn" onclick={ addAttachment }><i data-feather=plus></i></a></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td></td>
+                <td></td>
+                <td class="btn" onclick={ () => deleteField(field) }><i data-feather=trash></i></td>
+              </tr>
+            </tbody>
+          </table>
+        </section>
+      </main>
+    </route>
+    <route on-mounted={ onUpdated } path="/objects/:id">
+      <main if={ route.params[0] !== 'new' }>
+        <section>
+          EXISTING OBJECT: {JSON.stringify(route.params)}
+        </section>
+      </main>
+    </route>
+  </router>
+  <script>
+    const autocomplete  = require('autocompleter');
+    const feather       = require('feather-icons');
+    const Fuse          = require('fuse.js');
+    const objects       = [];
+    let   ontologyIndex = null;
+
+    function randomId(length) {
+      length = length || 16;
+      let output = '_';
+      while(output.length < length) {
+        output += Math.random().toString(36).substr(2);
+      }
+      return output.substr(0,length);
+    }
+
+    /* function encodeQuery(data) { */
+    /*   let result = []; */
+    /*   Object.keys(data).forEach(key => { */
+    /*     result.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key])); */
+    /*   }); */
+    /*   return result.join('&'); */
+    /* } */
+
+    export default {
+      updateValue(obj, key) {
+        return async ev => {
+          obj[key] = ev.srcElement.value;
+        };
+      },
+      async addField() {
+        let id = randomId();
+        this.objectSelected.fields.push({
+          id   : id,
+          key  : '',
+          value: '',
+        });
+        this.update();
+        await new Promise(r => setTimeout(r,1));
+        let inputKey = document.getElementById(id+'_key');
+        let inputValue = document.getElementById(id+'_value');
+
+        autocomplete({
+          input: inputKey,
+          emptyMsg: 'No items found',
+          fetch: (value, update) => {
+            update(ontologyIndex.search(value).map(i=>i.item).slice(0,10));
+          },
+          onSelect: selected => {
+            inputKey.value = selected.value;
+          },
+        });
+
+        // TODO: prepend known values for key
+        autocomplete({
+          input: inputValue,
+          emptyMsg: 'No items found',
+          fetch: (value, update) => {
+            update(ontologyIndex.search(value).map(i=>i.item).slice(0,10));
+          },
+          onSelect: selected => {
+            inputValue.value = selected.value;
+          },
+        });
+
+      },
+      async deleteField(field) {
+        let index = this.objectSelected.fields.indexOf(field);
+        this.objectSelected.fields.splice(index,1);
+        this.update();
+      },
+      async onBeforeMount() {
+        this.ontologies     = [];
+        this.objectSelected = {
+          fields: [],
+        };
+        fetch('/api/ontologies')
+          .then(async response => {
+            let data = await response.json();
+            Object.keys(data).forEach(namespace => {
+              Object.keys(data[namespace]).forEach(name => {
+                this.ontologies.push({
+                  namespace: namespace,
+                  name     : name,
+                  label    : namespace+':'+name,
+                  value    : namespace+':'+name,
+                  termType : data[namespace][name].termType,
+                  url      : data[namespace][name].value,
+                });
+              });
+            });
+            ontologyIndex = new Fuse(this.ontologies, {
+              keys: ['label'],
+            });
+          });
+      },
+      async onMounted() {
+        await new Promise(r => setTimeout(r,1));
+        feather.replace();
+      },
+      async onUpdated() {
+        await new Promise(r => setTimeout(r,1));
+        feather.replace();
+      },
+      async onSearch(ev) {
+        ev.preventDefault && ev.preventDefault();
+        console.log(ev);
+        /* fetch('/api/objects/search?' + encodeQuery({ */
+          /* q: ev.srcElement.value */
+        /* })).then(async response => { */
+          /* let data = await response.json(); */
+          /* console.log(data); */
+        /* }); */
+      }
+    }
+
+  </script>
+</app>
