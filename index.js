@@ -11,6 +11,11 @@ const conf = require('rc')('docman', {
 
 const app = require('./lib/router')(conf);
 
+global.service = {
+  db    : require('./lib/db')(conf.data),
+  uuidv4: require('./lib/uuidv4'),
+};
+
 app.use(require('morgan')('tiny'));
 app.use(require('body-parser').json());
 
