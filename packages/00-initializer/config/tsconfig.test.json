@@ -1,0 +1,14 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES6", "DOM"],
+    "target": "es6",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "outDir": "../lib/test",
+    "declarationDir": "../lib/test"
+  },
+  "include": [
+    "../test/**/*"
+  ]
+}

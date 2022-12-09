@@ -1,34 +1,6 @@
 {
   "name": "object-manager",
-  "version": "0.0.1",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "start": "node index.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/finwo/object-manager.git"
-  },
-  "author": "Robin Bron <robin@finwo.nl>",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/finwo/object-manager/issues"
-  },
-  "homepage": "https://github.com/finwo/object-manager#readme",
-  "funding": {
-    "url": "https://github.com/sponsors/finwo"
-  },
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "http-errors": "^1.8.0",
-    "level": "^6.0.1",
-    "level-hookdown": "^3.1.2",
-    "mime": "^2.4.6",
-    "morgan": "^1.10.0",
-    "rc": "^1.2.8",
-    "router": "^1.3.5",
-    "subleveldown": "^5.0.1"
-  }
+  "workspaces": [
+    "projects/api"
+  ]
 }
